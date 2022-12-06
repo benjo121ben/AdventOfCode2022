@@ -9,7 +9,6 @@
 #include<fstream>
 
 void find_marker(int marker_length){
-    char ch;
     std::fstream fin("../input", std::fstream::in);
     std::string data;
     std::getline(fin, data);
