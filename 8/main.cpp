@@ -15,8 +15,8 @@ std::uint64_t hash(std::uint64_t x, std::uint64_t y){
 
 
 void prepare_map(std::unordered_map<std::uint64_t, int>& map, const std::vector<std::string>& vec){
-    for (int y{0}; y < vec.size(); y++){
-        for(int x{0}; x < vec[y].size(); x++){
+    for (size_t y{0}; y < vec.size(); y++){
+        for(size_t x{0}; x < vec[y].size(); x++){
             int nr;
             std::from_chars(vec[y].data()+x, vec[y].data()+x+1, nr);
             map.emplace(hash(x,y), nr);
@@ -63,9 +63,9 @@ int main(){
     prepare_map(tree_map, vec);
 
     std::uint64_t p1{vec.size() * 2 + (vec[0].size()-2) * 2};
-    for(int y{1}; y < vec.size()-1; y++) {
+    for(size_t y{1}; y < vec.size()-1; y++) {
         int highest{tree_map.at(hash(0, y))};
-        for (int x{1}; x < vec[0].size()-1; x++) {
+        for (size_t x{1}; x < vec[0].size()-1; x++) {
 
             int base{0};
             int value = tree_map.at(hash(x, y));
@@ -77,7 +77,7 @@ int main(){
         }
     }
 
-    for(int y{1}; y < vec.size()-1; y++) {
+    for(size_t y{1}; y < vec.size()-1; y++) {
         int highest{tree_map.at(hash(vec[y].size() - 1, y))};
         for (auto x{vec[0].size()-2}; x >= 1;x--) {
             int base{visible_map[hash(x, y)]};
@@ -91,9 +91,9 @@ int main(){
         }
     }
 
-    for (int x{1}; x < vec[0].size()-1; x++) {
+    for (size_t x{1}; x < vec[0].size()-1; x++) {
         int highest{tree_map.at(hash(x,0))};
-        for(int y{1}; y < vec.size()-1; y++) {
+        for(size_t y{1}; y < vec.size()-1; y++) {
             int base{visible_map[hash(x, y)]};
             int value = tree_map.at(hash(x, y));
             if(highest < value) {
@@ -105,7 +105,7 @@ int main(){
         }
     }
 
-    for (int x{1}; x < vec[0].size()-1; x++) {
+    for (size_t x{1}; x < vec[0].size()-1; x++) {
         int highest{tree_map.at(hash(x,vec.size()-1))};
         for(auto y{vec.size()-2}; y >= 1; y--) {
             int base{visible_map[hash(x, y)]};
@@ -121,18 +121,16 @@ int main(){
 
         }
     }
+    auto middle {std::chrono::high_resolution_clock::now()};
     uint64_t p2{0};
-    for (int y{1}; y < vec.size() - 1; y++) {
-        for (int x{1}; x < vec[0].size() - 1; x++) {
+    for (size_t y{1}; y < vec.size() - 1; y++) {
+        for (size_t x{1}; x < vec[0].size() - 1; x++) {
             auto value = get_scenic_value(x, y, vec[0].size(), vec.size(), tree_map);
             if (p2 < value) {
                 p2 = value;
             }
         }
     }
-
-
-    auto middle {std::chrono::high_resolution_clock::now()};
     auto end {std::chrono::high_resolution_clock::now()};
     std::cout << "P1 answer " << p1 << std::endl;
     std::cout << "P2 answer " << p2 << std::endl;
